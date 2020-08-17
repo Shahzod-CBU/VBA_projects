@@ -2,10 +2,10 @@ Attribute VB_Name = "DailyExtended"
 Option Explicit
 
 Const EMBED_ATTACHMENT As Long = 1454, RICHTEXT As Long = 1
-Public Const stPath$ = "C:\Users\msd15\Desktop\Кунлик нархлар\"    'fayllar saqlanadigan papka
+Public Const stPath$ = "C:\Users\msd15\Desktop\ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°\"    'fayllar saqlanadigan papka
 Const sServerName$ = "Main/ABM", sUserDB$ = "d_ext\mb\01msd14.nsf" 'lokal server va ma'lumotlar bazasi nomlari
-                                                                   'Lotus => Файл => База данных => Свойства (Сервер, Имя файла)
-Const Shablon$ = "C:\Users\msd15\Desktop\Кунлик нархлар\+Печатга Кунлик Шаблон.xlsx"    'Kun ochish u-n shablon fayl
+                                                                   'Lotus => Г”Г Г©Г« => ГЃГ Г§Г  Г¤Г Г­Г­Г»Гµ => Г‘ГўГ®Г©Г±ГІГўГ  (Г‘ГҐГ°ГўГҐГ°, Г€Г¬Гї ГґГ Г©Г«Г )
+Const Shablon$ = "C:\Users\msd15\Desktop\ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°\+ГЏГҐГ·Г ГІГЈГ  ГЉГіГ­Г«ГЁГЄ ГГ ГЎГ«Г®Г­.xlsx"    'Kun ochish u-n shablon fayl
 Const sNotesSourceFolder$ = "$Inbox"    'Lotusda qaysi papkadan qidirish
 Const lAllCnt As Long = 20      'progress bar u-n bo'laklar soni
 Dim dblProgressWidth As Double, dblStep As Double, dblPercent As Double
@@ -41,7 +41,7 @@ tdate = Date
 'tdate = #11/6/2018#
 fldrMonthName = Format(tdate, "MMMM")
 fldrDateName = Format(tdate, "dd.mm.yyyy")
-NewFolder = "Нархлар кунлик\" & fldrMonthName & "\" & fldrDateName
+NewFolder = "ГЌГ Г°ГµГ«Г Г° ГЄГіГ­Г«ГЁГЄ\" & fldrMonthName & "\" & fldrDateName
 fldrpath = stPath & fldrMonthName
 
 Set fso = CreateObject("Scripting.FileSystemObject")
@@ -67,7 +67,7 @@ Do While Doc.GetItemValue("DeliveredDate")(0) >= tdate
         If vaItem.Type = RICHTEXT Then
             For Each vaAttachment In vaItem.EmbeddedObjects
                 Filename = vaAttachment.Name
-                If InStr(1, Filename, "кунлик", 3) <> 0 Then
+                If InStr(1, Filename, "ГЄГіГ­Г«ГЁГЄ", 3) <> 0 Then
                     NMoveDocsCollection.AddDocument Doc
                     vaAttachment.ExtractFile fldrpath & "\" & Filename
                     
@@ -123,20 +123,20 @@ Loop
 Call MyProgresBar
 
 'Open the template file and create a new folder to save it
-PechatDir = "C:\Users\msd15\Desktop\Кунлик нархлар\!Печать\" & fldrMonthName
+PechatDir = "C:\Users\msd15\Desktop\ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°\!ГЏГҐГ·Г ГІГј\" & fldrMonthName
 If Not fso.folderexists(PechatDir) Then fso.CreateFolder PechatDir
 Workbooks.Open Shablon, UpdateLinks:=False
 
 'Start working with the downloaded files
 Set JamlovchiWorkBk = ActiveWorkbook
-With Sheets("Кунлик нархлар")
+With Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°")
     LastColumn = .UsedRange.Column + .UsedRange.Columns.Count - 1
     LastRow = .UsedRange.Row + .UsedRange.Rows.Count - 1
 End With
 
 ReDim TempArray(1 To LastRow - 4, 1)
 
-With JamlovchiWorkBk.Sheets("Кунлик нархлар")
+With JamlovchiWorkBk.Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°")
     .Range("D5:Q98").ClearContents
     .Range("D2") = tdate
     Bugun = .Cells(2, 4).Value
@@ -146,7 +146,7 @@ sFiles = Dir(sFolder & "*.xls*")
 Call MyProgresBar
 
 Do While sFiles <> ""
-      If sFiles <> JamlovchiWorkBk.Name Or InStr(1, sFiles, "кунлик", 3) <> 0 Then 'check if the names of files include the specified word
+      If sFiles <> JamlovchiWorkBk.Name Or InStr(1, sFiles, "ГЄГіГ­Г«ГЁГЄ", 3) <> 0 Then 'check if the names of files include the specified word
         On Error Resume Next
         Workbooks.Open sFolder & sFiles, UpdateLinks:=False
         If Err <> 0 Then
@@ -154,10 +154,10 @@ Do While sFiles <> ""
           Do
             InvalidChar = WorksheetFunction.Find(Chr(63), sFiles, i)
                 If i > 1 Then
-                    sNewFileName = WorksheetFunction.Replace(sNewFileName, InvalidChar, 1, "к")
+                    sNewFileName = WorksheetFunction.Replace(sNewFileName, InvalidChar, 1, "ГЄ")
                     sFileName = WorksheetFunction.Replace(sFileName, InvalidChar, 1, ChrW(1178))
                 Else
-                    sNewFileName = WorksheetFunction.Replace(sFiles, InvalidChar, 1, "к")
+                    sNewFileName = WorksheetFunction.Replace(sFiles, InvalidChar, 1, "ГЄ")
                     sFileName = WorksheetFunction.Replace(sFiles, InvalidChar, 1, ChrW(1178))
                 End If
             i = InvalidChar + 1
@@ -170,34 +170,34 @@ Do While sFiles <> ""
             GoTo Handler
         End If
         Hudud = Left(Cells(2, 2).Value, 5)
-            If Hudud = "Тошке" Then
+            If Hudud = "Г’Г®ГёГЄГҐ" Then
                 Hudud = Left(Cells(2, 2).Value, WorksheetFunction.Find(" ", Cells(2, 2), 3) + 1)
                 Select Case Hudud
-                    Case "Тошкент в": h = 10
-                    Case "Тошкент ш": h = 14
+                    Case "Г’Г®ГёГЄГҐГ­ГІ Гў": h = 10
+                    Case "Г’Г®ГёГЄГҐГ­ГІ Гё": h = 14
                 End Select
             Else
                 Select Case Hudud
-                    Case "Андиж": h = 2
-                    Case "Бухор": h = 3
-                    Case "Жизза": h = 4
-                    Case "Навои": h = 5
-                    Case "Наман": h = 6
-                    Case "Самар": h = 7
-                    Case "Сирда": h = 8
-                    Case "Сурхо": h = 9
-                    Case "ФАР" & ChrW(1170) & "О": h = 11
-                    Case ChrW(1178) & "аш" & ChrW(1179) & "а": h = 12
-                    Case "Хораз": h = 13
+                    Case "ГЂГ­Г¤ГЁГ¦": h = 2
+                    Case "ГЃГіГµГ®Г°": h = 3
+                    Case "Г†ГЁГ§Г§Г ": h = 4
+                    Case "ГЌГ ГўГ®ГЁ": h = 5
+                    Case "ГЌГ Г¬Г Г­": h = 6
+                    Case "Г‘Г Г¬Г Г°": h = 7
+                    Case "Г‘ГЁГ°Г¤Г ": h = 8
+                    Case "Г‘ГіГ°ГµГ®": h = 9
+                    Case "Г”ГЂГђ" & ChrW(1170) & "ГЋ": h = 11
+                    Case ChrW(1178) & "Г Гё" & ChrW(1179) & "Г ": h = 12
+                    Case "Г•Г®Г°Г Г§": h = 13
                     Case Else: h = 1
             End Select
             End If
         TempArray = Cells.Find(What:=Bugun, LookIn:=xlValues).Offset(2, 0).Range(Cells(1, 1), Cells(LastRow - 4, 1)).Value
         ActiveWorkbook.Close False
         JamlovchiWorkBk.Activate
-        Sheets("Кунлик нархлар").Range(Sheets("Кунлик нархлар").Cells(5, h + 3), Sheets("Кунлик нархлар").Cells(LastRow, h + 3)).Value = TempArray
+        Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°").Range(Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°").Cells(5, h + 3), Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°").Cells(LastRow, h + 3)).Value = TempArray
         '**************
-        Sheets("Кунлик нархлар").Cells(99, h + 3) = fldrtime(h)
+        Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°").Cells(99, h + 3) = fldrtime(h)
         '**************
      End If
     sFiles = Dir
@@ -205,20 +205,20 @@ Do While sFiles <> ""
 Handler:
 Loop
 
-JamlovchiWorkBk.Worksheets("Печатга").Activate
-JamlovchiWorkBk.SaveAs PechatDir & "\" & "+Печатга Кунлик " & Format(tdate, "dd.mm.yyyy") & ".xlsx"
+JamlovchiWorkBk.Worksheets("ГЏГҐГ·Г ГІГЈГ ").Activate
+JamlovchiWorkBk.SaveAs PechatDir & "\" & "+ГЏГҐГ·Г ГІГЈГ  ГЉГіГ­Г«ГЁГЄ " & Format(tdate, "dd.mm.yyyy") & ".xlsx"
 Set TayyorWb = ActiveWorkbook
 TayyorWb.Save
 Call MyProgresBar
 
 'Create a new memo in Lotus Notes
-If WorksheetFunction.Count(Sheets("Кунлик нархлар").Range("D5:Q5")) = 14 Then
+If WorksheetFunction.Count(Sheets("ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г°").Range("D5:Q5")) = 14 Then
     Dim EditDoc As Object, AttachME As Object, Attachment$, EmbedObj
     
     Set NewDoc = noDatabase.CREATEDOCUMENT
     With NewDoc
         .form = "Memo"
-        .Subject = "Кунлик нархлар " & fldrDateName & " холатига"
+        .Subject = "ГЉГіГ­Г«ГЁГЄ Г­Г Г°ГµГ«Г Г° " & fldrDateName & " ГµГ®Г«Г ГІГЁГЈГ "
         .SendTo = Array("01pom3/MB/Uzb@Banks, 01msd5/MB/Uzb@Banks, 01msd7/MB/Uzb@Banks")
         Attachment = TayyorWb.FullName
         Set AttachME = .CREATERICHTEXTITEM("Attachment")
@@ -246,7 +246,7 @@ With Application
  .ScreenUpdating = True
  .DisplayAlerts = True
  Finish = Timer
- .StatusBar = Format(Finish - Start, "0.00") & " секундда муваффа" & ChrW(1179) & "иятли бажарилди!"
+ .StatusBar = Format(Finish - Start, "0.00") & " Г±ГҐГЄГіГ­Г¤Г¤Г  Г¬ГіГўГ ГґГґГ " & ChrW(1179) & "ГЁГїГІГ«ГЁ ГЎГ Г¦Г Г°ГЁГ«Г¤ГЁ!"
  .OnTime Now + TimeValue("00:00:06"), "KillStatBar"
 End With
 Unload frmStatusBar
@@ -290,7 +290,7 @@ Private Sub CheckIsDone()
     tdate = Date
     fldrMonthName = Format(tdate, "MMMM")
     fldrDateName = Format(tdate, "dd.mm.yyyy")
-    NewFolder = "Нархлар кунлик\" & fldrMonthName & "\" & fldrDateName
+    NewFolder = "ГЌГ Г°ГµГ«Г Г° ГЄГіГ­Г«ГЁГЄ\" & fldrMonthName & "\" & fldrDateName
     fldrpath = stPath & fldrMonthName
     
     Dim fso As Object
