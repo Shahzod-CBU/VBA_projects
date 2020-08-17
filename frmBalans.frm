@@ -24,7 +24,7 @@ Private Sub Chiqish_Click()
 End Sub
 
 Private Sub Kursatish_Click()
-    avFiles = Application.GetOpenFilename("Excel files(*.xls*),*.xls*", 1, "Выбрать Excel файлы", , False)
+    avFiles = Application.GetOpenFilename("Excel files(*.xls*),*.xls*", 1, "Г‚Г»ГЎГ°Г ГІГј Excel ГґГ Г©Г«Г»", , False)
     If VarType(avFiles) = vbBoolean Then Exit Sub
     Yul.Value = avFiles
 End Sub
@@ -33,15 +33,15 @@ Private Sub OK_Click()
     Dim SanaManba, ListManba(), bListlar(), Sanalar(), i As Integer
     Dim ListOti As String, JoriyTest As Long, OldingiKunTest As Integer
     Dim SofFoyda As Long, TaqsimFoyda As Long
-    ListManba = Array("ЦБ", "КБ")
-    bListlar = Array(ЦБ, КБ)
+    ListManba = Array("Г–ГЃ", "ГЉГЃ")
+    bListlar = Array(Г–ГЃ, ГЉГЃ)
     Sanalar = Array(tbSana, tbOldingiSana)
     
     If Len(Yul) = 0 Then
         MsgBox "Iltimos faylni ko'rsating", vbCritical, "Xatolik"
         Exit Sub
     End If
-    If ЦБ.Value = False And КБ.Value = False Then
+    If Г–ГЃ.Value = False And ГЉГЃ.Value = False Then
         MsgBox "Iltimos kamida bitta list tanlang", vbCritical, "Xatolik"
         Exit Sub
     End If
@@ -73,7 +73,7 @@ Private Sub OK_Click()
     
     On Error Resume Next
     
-    OldingiKunTest = wbJamlovchi.Worksheets("ЦБ(конс_new)").Rows(4).Cells.Find(What:=CDate(tbOldingiSana), LookIn:=xlFormulas).Column
+    OldingiKunTest = wbJamlovchi.Worksheets("Г–ГЃ(ГЄГ®Г­Г±_new)").Rows(4).Cells.Find(What:=CDate(tbOldingiSana), LookIn:=xlFormulas).Column
     If Err <> 0 Then
         MsgBox "Ko'rsatilgan Oldingi sana uchun hali balansda kun ochilmagan", vbCritical, "Xatolik"
         Exit Sub
@@ -164,11 +164,11 @@ Private Sub UserForm_Initialize()
     Dim joriy_sana As Range, new_sana As Date
     tbSana.Value = Format(ExceptDaysOff(Date - 1), "dd/mm/yyyy")
     tbOldingiSana.Value = Format(ExceptDaysOff(ExceptDaysOff(Date - 1) - 1), "dd/mm/yyyy")
-'    Yul = "D:\Монетар сиёсат\ДКП\Баланс\Баланс_ЦБ_КБ_кунлик (минг)_17.08.xls"
+'    Yul = "D:\ГЊГ®Г­ГҐГІГ Г° Г±ГЁВёГ±Г ГІ\Г„ГЉГЏ\ГЃГ Г«Г Г­Г±\ГЃГ Г«Г Г­Г±_Г–ГЃ_ГЉГЃ_ГЄГіГ­Г«ГЁГЄ (Г¬ГЁГ­ГЈ)_17.08.xls"
     
-'    Set joriy_sana = Workbooks("Баланс макро.xlsm").Sheets(1).Range("A1")
+'    Set joriy_sana = Workbooks("ГЃГ Г«Г Г­Г± Г¬Г ГЄГ°Г®.xlsm").Sheets(1).Range("A1")
 '    new_sana = DateSerial(Year(joriy_sana), Month(joriy_sana) + 2, 0)
-'    Yul = "D:\Balance\баланс 2014-2019\" & Format(new_sana, "YYYY-MM-DD") & ".xls"
+'    Yul = "D:\Balance\ГЎГ Г«Г Г­Г± 2014-2019\" & Format(new_sana, "YYYY-MM-DD") & ".xls"
 ''    Debug.Print new_sana
 '    tbSana.Value = new_sana
 '    tbOldingiSana.Value = joriy_sana
