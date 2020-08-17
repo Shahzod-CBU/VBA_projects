@@ -1,17 +1,13 @@
 Attribute VB_Name = "Liquidity"
 Option Explicit
 Public Const stPath$ = "D:"                     'fayllar saqlanadigan papka
-Public Const templatesPath$ = "c:\Users\Asus\Documents\корсчет керак"
+Public Const templatesPath$ = "c:\Users\Asus\Documents\ГЄГ®Г°Г±Г·ГҐГІ ГЄГҐГ°Г ГЄ"
 Const downloadsPath$ = "c:\Users\Asus\Downloads"
-
-'Public Const stPath$ = "C:\Users\Salixov_M\Desktop\Тест ликвид"
-'Public Const templatesPath$ = "C:\Users\Salixov_M\Desktop\корсчет керак"
-'Const downloadsPath$ = "C:\Users\Salixov_M\Downloads"
 
 Public tdate, ttime As Date, fldrMonthName$, fldrYear$, NewFolder$, fldrpath$, monthNum$
 Public fldrpathMonth$, fldrpathResults$
 
-Sub Корсчет_анализ()
+Sub Liquidity()
 
 '14.01.2018 da Shahzod tomonidan yozildi
 '18.02.2018 da yangilandi (Banklar nomini qo'shish)
@@ -30,7 +26,7 @@ If tdate = "False" Then Exit Sub
 
 ListlarNomi = Array("Dr", "Cr")
 PivotListlar = Array("PivotDr", "PivotCr")
-TurProvod = Array("Дт", "Кт")
+TurProvod = Array("Г„ГІ", "ГЉГІ")
 lAllCnt = 25
 Call Show_PrBar_Or_No(lAllCnt, "Bajarilmoqda...")
 
@@ -40,12 +36,12 @@ Application.Calculation = xlCalculationManual
 Start = Timer
 Call MyProgresBar
 
-'tdate = Date
+tdate = Date
 'tdate = #12/20/2018#
 fldrYear = Format(tdate, "yyyy")
 monthNum = Format(tdate, "mm")
 fldrMonthName = Format(tdate, "MMMM")
-NewFolder = "кунлик корр. счет " & fldrYear '& "\" & monthNum & " " & fldrMonthName & "\" & fldrMonthName
+NewFolder = "ГЄГіГ­Г«ГЁГЄ ГЄГ®Г°Г°. Г±Г·ГҐГІ " & fldrYear '& "\" & monthNum & " " & fldrMonthName & "\" & fldrMonthName
 fldrpath = stPath & "\" & NewFolder
 
 Set fso = CreateObject("Scripting.FileSystemObject")
@@ -55,8 +51,7 @@ If Not fso.folderexists(fldrpathMonth) Then fso.CreateFolder fldrpathMonth  'Cre
 fldrpathResults = fldrpathMonth & "\" & fldrMonthName
 If Not fso.folderexists(fldrpathResults) Then MkDir fldrpathResults         'Create a folder for results
 
-Set IshchiKitob = Application.Workbooks.Open(templatesPath & "\" & "ФакторМанбаКорсчет (Учирилмасин).xlsx", False)
-'Set IshchiKitob = Application.Workbooks.Open("C:\Users\Администратор\Desktop\Shahzod\корсчет керак\ФакторМанбаКорсчет (Учирилмасин).xlsx", False)
+Set IshchiKitob = Application.Workbooks.Open(templatesPath & "\" & "Г”Г ГЄГІГ®Г°ГЊГ Г­ГЎГ ГЉГ®Г°Г±Г·ГҐГІ (Г“Г·ГЁГ°ГЁГ«Г¬Г Г±ГЁГ­).xlsx", False)
 
 For n = 0 To 1
     IshchiKitob.Worksheets.Add
@@ -75,8 +70,8 @@ For n = 0 To 1
         Call MyProgresBar
         
         With Range(Cells(1, 1), Cells(1, 11))
-            .Value = Array("№", "Банк Дт", "Лицевой счет Дт", "Банк Кт", "Лицевой счет Кт", _
-                            "Сумма" & TurProvod(n), "Дт", "Кт", "Фактор1", "Фактор2", "Банк")
+            .Value = Array("В№", "ГЃГ Г­ГЄ Г„ГІ", "Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ Г„ГІ", "ГЃГ Г­ГЄ ГЉГІ", "Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ ГЉГІ", _
+                            "Г‘ГіГ¬Г¬Г " & TurProvod(n), "Г„ГІ", "ГЉГІ", "Г”Г ГЄГІГ®Г°1", "Г”Г ГЄГІГ®Г°2", "ГЃГ Г­ГЄ")
             .HorizontalAlignment = xlLeft
             .Font.Bold = True
         End With
@@ -111,37 +106,37 @@ For n = 0 To 1
         JadvalNomi = ListlarNomi(n) & "Jadval"
         Call MyProgresBar
         
-        Harbiy = ChrW(1202) & "арбий ХЮС"
-        Hukumat = ChrW(1202) & "укумат"
+        Harbiy = ChrW(1202) & "Г Г°ГЎГЁГ© Г•ГћГ‘"
+        Hukumat = ChrW(1202) & "ГіГЄГіГ¬Г ГІ"
         
         'Svodniy jadval tayyorlaymiz
         .ListObjects.Add(xlSrcRange, Range("$A$1:$K$" & LastRow), , xlYes).Name = JadvalNomi
         .ListObjects(JadvalNomi).ShowTableStyleRowStripes = False
         .ListObjects(JadvalNomi).TableStyle = "TableStyleMedium2"
-        .Range(JadvalNomi & "[Фактор1]").FormulaR1C1 = _
-            "=IF([@" & TurProvod(n) & "]<>21596,IFERROR(VLOOKUP([@" & TurProvod(n) & "], ФакторБалансСчет, 2, 0)," & _
-                "LOOKUP(LEFT([@" & TurProvod(n) & "]),{""4"",""5""},{""Даромад"",""Харажат""}))," & _
-                "IFERROR(VLOOKUP(MID([@[Лицевой счет " & TurProvod(n) & "]],10,8), ФакторОмил,2,0)," & _
-                "IFERROR(VLOOKUP(MID([@[Лицевой счет " & TurProvod(n) & "]],10,11), ФакторКлиентКод,2,0)," & Chr(34) & Harbiy & Chr(34) & ")))"
+        .Range(JadvalNomi & "[Г”Г ГЄГІГ®Г°1]").FormulaR1C1 = _
+            "=IF([@" & TurProvod(n) & "]<>21596,IFERROR(VLOOKUP([@" & TurProvod(n) & "], Г”Г ГЄГІГ®Г°ГЃГ Г«Г Г­Г±Г‘Г·ГҐГІ, 2, 0)," & _
+                "LOOKUP(LEFT([@" & TurProvod(n) & "]),{""4"",""5""},{""Г„Г Г°Г®Г¬Г Г¤"",""Г•Г Г°Г Г¦Г ГІ""}))," & _
+                "IFERROR(VLOOKUP(MID([@[Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ " & TurProvod(n) & "]],10,8), Г”Г ГЄГІГ®Г°ГЋГ¬ГЁГ«,2,0)," & _
+                "IFERROR(VLOOKUP(MID([@[Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ " & TurProvod(n) & "]],10,11), Г”Г ГЄГІГ®Г°ГЉГ«ГЁГҐГ­ГІГЉГ®Г¤,2,0)," & Chr(34) & Harbiy & Chr(34) & ")))"
         Call MyProgresBar
 
-        .Range(JadvalNomi & "[Фактор2]").FormulaR1C1 = _
-            "=IF([@" & TurProvod(n) & "]<>21596,IFERROR(VLOOKUP([@" & TurProvod(n) & "],ФакторБалансСчет,3,0)," & _
-                "IF(OR([@Фактор1]=""Харажат"",[@Фактор1]=""Даромад""),""МБ хўжалик операциялари""))," & _
-                "IFERROR(VLOOKUP(MID([@[Лицевой счет " & TurProvod(n) & "]],10,11),ФакторКлиентКод,2,0)," & _
-                "IF([@Фактор1]=" & Chr(34) & Harbiy & Chr(34) & ", " & Chr(34) & Hukumat & Chr(34) & ",""МБ хўжалик операциялари"")))"
+        .Range(JadvalNomi & "[Г”Г ГЄГІГ®Г°2]").FormulaR1C1 = _
+            "=IF([@" & TurProvod(n) & "]<>21596,IFERROR(VLOOKUP([@" & TurProvod(n) & "],Г”Г ГЄГІГ®Г°ГЃГ Г«Г Г­Г±Г‘Г·ГҐГІ,3,0)," & _
+                "IF(OR([@Г”Г ГЄГІГ®Г°1]=""Г•Г Г°Г Г¦Г ГІ"",[@Г”Г ГЄГІГ®Г°1]=""Г„Г Г°Г®Г¬Г Г¤""),""ГЊГЃ ГµВўГ¦Г Г«ГЁГЄ Г®ГЇГҐГ°Г Г¶ГЁГїГ«Г Г°ГЁ""))," & _
+                "IFERROR(VLOOKUP(MID([@[Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ " & TurProvod(n) & "]],10,11),Г”Г ГЄГІГ®Г°ГЉГ«ГЁГҐГ­ГІГЉГ®Г¤,2,0)," & _
+                "IF([@Г”Г ГЄГІГ®Г°1]=" & Chr(34) & Harbiy & Chr(34) & ", " & Chr(34) & Hukumat & Chr(34) & ",""ГЊГЃ ГµВўГ¦Г Г«ГЁГЄ Г®ГЇГҐГ°Г Г¶ГЁГїГ«Г Г°ГЁ"")))"
         
         Call MyProgresBar
         
-        .Range(JadvalNomi & "[Банк]").FormulaR1C1 = "=VLOOKUP([@Банк " & TurProvod(1 - n) & "], BankNums, 3, 0)"
+        .Range(JadvalNomi & "[ГЃГ Г­ГЄ]").FormulaR1C1 = "=VLOOKUP([@ГЃГ Г­ГЄ " & TurProvod(1 - n) & "], BankNums, 3, 0)"
 
-        SummaSchot = "Сумма" & TurProvod(n)
+        SummaSchot = "Г‘ГіГ¬Г¬Г " & TurProvod(n)
         IshchiKitob.Queries.Add Name:=JadvalNomi, Formula:= _
-            "let" & Chr(13) & Chr(10) & "    Источник = Excel.CurrentWorkbook(){[Name=" & Chr(34) & JadvalNomi & Chr(34) & "]}[Content]," & _
-                    Chr(13) & Chr(10) & "    #""Измененный тип"" = Table.TransformColumnTypes(Источник,{{""№"", Int64.Type}, {""Банк Дт"", Int64.Type}, {""Лицевой счет Дт"", type number}, {""Банк Кт"", Int64.Type}, {""Лицевой счет Кт"", type number}," & _
-                    "{" & Chr(34) & SummaSchot & Chr(34) & ", type number}, {""Дт"", Int64.Type},{""Кт"", Int64.Type}, {""Фактор1"", type text}, {""Фактор2"", type text}, {""Банк"", type text}})" & Chr(13) & "" & Chr(10) & "in" & Chr(13) & "" & Chr(10) & "    #""Измененный тип"""
+            "let" & Chr(13) & Chr(10) & "    Г€Г±ГІГ®Г·Г­ГЁГЄ = Excel.CurrentWorkbook(){[Name=" & Chr(34) & JadvalNomi & Chr(34) & "]}[Content]," & _
+                    Chr(13) & Chr(10) & "    #""Г€Г§Г¬ГҐГ­ГҐГ­Г­Г»Г© ГІГЁГЇ"" = Table.TransformColumnTypes(Г€Г±ГІГ®Г·Г­ГЁГЄ,{{""В№"", Int64.Type}, {""ГЃГ Г­ГЄ Г„ГІ"", Int64.Type}, {""Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ Г„ГІ"", type number}, {""ГЃГ Г­ГЄ ГЉГІ"", Int64.Type}, {""Г‹ГЁГ¶ГҐГўГ®Г© Г±Г·ГҐГІ ГЉГІ"", type number}," & _
+                    "{" & Chr(34) & SummaSchot & Chr(34) & ", type number}, {""Г„ГІ"", Int64.Type},{""ГЉГІ"", Int64.Type}, {""Г”Г ГЄГІГ®Г°1"", type text}, {""Г”Г ГЄГІГ®Г°2"", type text}, {""ГЃГ Г­ГЄ"", type text}})" & Chr(13) & "" & Chr(10) & "in" & Chr(13) & "" & Chr(10) & "    #""Г€Г§Г¬ГҐГ­ГҐГ­Г­Г»Г© ГІГЁГЇ"""
         IshchiKitob.Connections.Add2 _
-            "Запрос — " & JadvalNomi, "Соединение с запросом " & JadvalNomi & " в книге.", _
+            "Г‡Г ГЇГ°Г®Г± вЂ” " & JadvalNomi, "Г‘Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГҐ Г± Г§Г ГЇГ°Г®Г±Г®Г¬ " & JadvalNomi & " Гў ГЄГ­ГЁГЈГҐ.", _
             "OLEDB;Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=" & JadvalNomi _
             , "SELECT * FROM [" & JadvalNomi & "]", 2
 
@@ -155,7 +150,7 @@ For n = 0 To 1
     IshchiKitob.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=JadvalNomi, _
        Version:=xlPivotTableVersion12).CreatePivotTable TableDestination:=PivotListlar(n) & "!R3C1", _
        TableName:="Pivot" & n + 1, DefaultVersion:=xlPivotTableVersion12
-    UstunNomi = TurProvod(n) & " оборот"
+    UstunNomi = TurProvod(n) & " Г®ГЎГ®Г°Г®ГІ"
     Call MyProgresBar
     
     Rem Svodniy jadval parametrlarini to'g'rilaymiz
@@ -164,19 +159,19 @@ For n = 0 To 1
     With Sheets(PivotListlar(n)).PivotTables("Pivot" & n + 1)
         .AddDataField ActiveSheet.PivotTables("Pivot" & n + 1).PivotFields(SummaSchot), UstunNomi, xlSum
         .PivotFields(UstunNomi).NumberFormat = "#,##0"
-        With .PivotFields("Фактор2")
+        With .PivotFields("Г”Г ГЄГІГ®Г°2")
             .Orientation = xlRowField
             .Position = 1
             .AutoSort xlDescending, UstunNomi
-            .PivotItems("Клиринг").Visible = False
+            .PivotItems("ГЉГ«ГЁГ°ГЁГ­ГЈ").Visible = False
         End With
-        With .PivotFields("Фактор1")
+        With .PivotFields("Г”Г ГЄГІГ®Г°1")
             .Orientation = xlRowField
             .Position = 2
             .AutoSort xlDescending, UstunNomi
         End With
-        .PivotFields("Дт").Orientation = xlPageField
-        .PivotFields("Дт").PivotItems("27402").Visible = False
+        .PivotFields("Г„ГІ").Orientation = xlPageField
+        .PivotFields("Г„ГІ").PivotItems("27402").Visible = False
     End With
     Call MyProgresBar
     
@@ -184,9 +179,9 @@ Next n
 
 With IshchiKitob
     .Queries.Add Name:="TotalPivot", Formula:= _
-        "let" & Chr(13) & Chr(10) & "    Источник = Table.Combine({DrJadval, CrJadval})" & Chr(13) & Chr(10) & "in" & Chr(13) & Chr(10) & "    Источник"
+        "let" & Chr(13) & Chr(10) & "    Г€Г±ГІГ®Г·Г­ГЁГЄ = Table.Combine({DrJadval, CrJadval})" & Chr(13) & Chr(10) & "in" & Chr(13) & Chr(10) & "    Г€Г±ГІГ®Г·Г­ГЁГЄ"
     .Connections.Add2 _
-        "Запрос — TotalPivot", "Соединение с запросом ""TotalPivot"" в книге.", _
+        "Г‡Г ГЇГ°Г®Г± вЂ” TotalPivot", "Г‘Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГҐ Г± Г§Г ГЇГ°Г®Г±Г®Г¬ ""TotalPivot"" Гў ГЄГ­ГЁГЈГҐ.", _
         "OLEDB;Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=TotalPivot" _
         , "SELECT * FROM [TotalPivot]", 2
     .Worksheets.Add
@@ -194,7 +189,7 @@ With IshchiKitob
     
     .ActiveSheet.Name = "PivotNet"
     .PivotCaches.Create(SourceType:=xlExternal, SourceData:= _
-        ActiveWorkbook.Connections("Запрос — TotalPivot"), Version:=6).CreatePivotTable _
+        ActiveWorkbook.Connections("Г‡Г ГЇГ°Г®Г± вЂ” TotalPivot"), Version:=6).CreatePivotTable _
         TableDestination:="PivotNet!R3C1", TableName:="PivotNet", _
         DefaultVersion:=6
 End With
@@ -202,26 +197,26 @@ Call MyProgresBar
 
 'On Error Resume Next
 With Sheets("PivotNet").PivotTables("PivotNet")
-    .CalculatedFields.Add "Таъсири", "=(СуммаДт-СуммаКт)/10^9"
-    .PivotFields("Таъсири").Orientation = xlDataField
-    .PivotFields("Сумма по полю Таъсири").Caption = "Соф таъсири"
-    '.PivotFields("Sum of Таъсири").Caption = "Соф таъсири"
+    .CalculatedFields.Add "Г’Г ГєГ±ГЁГ°ГЁ", "=(Г‘ГіГ¬Г¬Г Г„ГІ-Г‘ГіГ¬Г¬Г ГЉГІ)/10^9"
+    .PivotFields("Г’Г ГєГ±ГЁГ°ГЁ").Orientation = xlDataField
+    .PivotFields("Г‘ГіГ¬Г¬Г  ГЇГ® ГЇГ®Г«Гѕ Г’Г ГєГ±ГЁГ°ГЁ").Caption = "Г‘Г®Гґ ГІГ ГєГ±ГЁГ°ГЁ"
+    '.PivotFields("Sum of Г’Г ГєГ±ГЁГ°ГЁ").Caption = "Г‘Г®Гґ ГІГ ГєГ±ГЁГ°ГЁ"
     .DataBodyRange.NumberFormat = "#,##0"
-    '.PivotFields("Банк").Orientation = xlColumnField
-    With .PivotFields("Фактор2")
+    '.PivotFields("ГЃГ Г­ГЄ").Orientation = xlColumnField
+    With .PivotFields("Г”Г ГЄГІГ®Г°2")
         .Orientation = xlRowField
         .Position = 1
-        .AutoSort xlDescending, "Соф таъсири"
-        .PivotItems("Клиринг").Visible = False
+        .AutoSort xlDescending, "Г‘Г®Гґ ГІГ ГєГ±ГЁГ°ГЁ"
+        .PivotItems("ГЉГ«ГЁГ°ГЁГ­ГЈ").Visible = False
     End With
-'    With .PivotFields("Фактор1")
+'    With .PivotFields("Г”Г ГЄГІГ®Г°1")
 '        .Orientation = xlRowField
 '        .Position = 2
-'        .AutoSort xlDescending, "Соф таъсири"
+'        .AutoSort xlDescending, "Г‘Г®Гґ ГІГ ГєГ±ГЁГ°ГЁ"
 '    End With
-    .PivotFields("Дт").Orientation = xlPageField
-    .PivotFields("Дт").PivotItems("27402").Visible = False
-    Set TasirField = .PivotFields("Соф таъсири")
+    .PivotFields("Г„ГІ").Orientation = xlPageField
+    .PivotFields("Г„ГІ").PivotItems("27402").Visible = False
+    Set TasirField = .PivotFields("Г‘Г®Гґ ГІГ ГєГ±ГЁГ°ГЁ")
 End With
 Call MyProgresBar
 
@@ -237,7 +232,7 @@ With TasirField.DataRange.FormatConditions
 End With
 Call MyProgresBar
 
-IshchiKitob.SaveAs fldrpathResults & "\" & "Корсчет фактор " & Format(tdate, "dd.mm.yyyy") & ".xlsx"
+IshchiKitob.SaveAs fldrpathResults & "\" & "ГЉГ®Г°Г±Г·ГҐГІ ГґГ ГЄГІГ®Г° " & Format(tdate, "dd.mm.yyyy") & ".xlsx"
 Call MyProgresBar
 
 Finish = Timer
